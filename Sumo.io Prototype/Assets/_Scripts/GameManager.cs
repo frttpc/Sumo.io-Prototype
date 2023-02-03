@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static GameManager Instance;
+
+    [SerializeField] private float totalTime;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
+    }
+
+    public void ChangeTimeScale()
+    {
+        if (Time.timeScale == 1)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
     }
 }
