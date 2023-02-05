@@ -5,11 +5,13 @@ public class AIController : Wrestler
     [SerializeField] private GameObject target;
 
     [SerializeField] private int decisiveness;
+    [SerializeField] private float rotationSpeed;
     private int decisivenessCoeff;
     private float hunterCoeff;
     private float gathererCoeff;
     private Wrestler lastTouched = null;
-    
+    private Quaternion rotationAmount;
+
     private Rigidbody AIRB;
     private Animator AIAnim;
 
@@ -30,6 +32,9 @@ public class AIController : Wrestler
     {
         if (target == null)
             AquireTarget();
+        else
+            AIRB.transform.LookAt(target.transform.position);
+
         if (Random.Range(1, decisivenessCoeff) == 1)
             AquireTarget();
 
@@ -38,16 +43,14 @@ public class AIController : Wrestler
 
     private void FixedUpdate()
     {
-
-
-        //AIRB.AddForce(AIRB.transform.forward * acceleration, ForceMode.Force);
+        AIRB.AddForce(AIRB.transform.forward * acceleration, ForceMode.Force);
         if (AIRB.velocity.sqrMagnitude > maxSpeed * maxSpeed)
             AIRB.AddForce(-acceleration * AIRB.velocity, ForceMode.Force);
     }
 
     private void AquireTarget()
     {
-        Collider[] objects = Physics.OverlapSphere(AIRB.transform.position, 9);
+        Collider[] objects = Physics.OverlapSphere(AIRB.transform.position, 20);
 
         float closestEnemyDist = float.MaxValue;
         float closestCoinDist = float.MaxValue;
@@ -105,6 +108,7 @@ public class AIController : Wrestler
             collision.gameObject.GetComponentInParent<Rigidbody>().AddForce(dir * weakPointPushAmount, ForceMode.Impulse);
             lastTouched = collision.gameObject.GetComponentInParent<Wrestler>();
         }
+        
 
         AIRB.AddForce(0.5f * pushAmount * -dir, ForceMode.Impulse);
         AIAnim.SetBool("isPushing", true);
@@ -113,5 +117,11 @@ public class AIController : Wrestler
     public Wrestler GetLastTouched()
     {
         return lastTouched;
+    }
+
+        private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Coin"))
+            CoinManager.Instance.CoinTaken(other.gameObject);
     }
 }

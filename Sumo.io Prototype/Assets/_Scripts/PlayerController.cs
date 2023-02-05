@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : Wrestler
 {
+    [SerializeField] private float rotationSpeed;
+
     private Touch touch;
     private Rigidbody playerRB;
     private Animator playerAnim;
@@ -42,7 +44,7 @@ public class PlayerController : Wrestler
 
     private void FixedUpdate()
     {
-        playerRB.MoveRotation(rotateAmount.normalized);
+        playerRB.MoveRotation(Quaternion.Lerp(transform.rotation, rotateAmount.normalized, rotationSpeed * Time.fixedDeltaTime));
 
         playerRB.AddForce(playerRB.transform.forward * acceleration, ForceMode.Force);
         if (playerRB.velocity.sqrMagnitude > maxSpeed * maxSpeed)

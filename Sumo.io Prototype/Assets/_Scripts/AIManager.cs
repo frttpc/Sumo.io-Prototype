@@ -45,7 +45,9 @@ public class AIManager : MonoBehaviour
 
     public void AIDied(AIController deadAI)
     {
-        deadAI.GetLastTouched().GivePoints(AIValue);
+        if(deadAI.GetLastTouched() != null)
+            deadAI.GetLastTouched().GivePoints(AIValue);
+
         AIs.Remove(deadAI);
         Destroy(deadAI.gameObject);
 
