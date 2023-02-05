@@ -10,7 +10,6 @@ public class AIController : Wrestler
     private float hunterCoeff;
     private float gathererCoeff;
     private Wrestler lastTouched = null;
-    private Quaternion rotationAmount;
 
     private Rigidbody AIRB;
     private Animator AIAnim;
@@ -105,10 +104,10 @@ public class AIController : Wrestler
         }
         else if (collision.gameObject.CompareTag("WeakPoint"))
         {
-            collision.gameObject.GetComponentInParent<Rigidbody>().AddForce(dir * weakPointPushAmount, ForceMode.Impulse);
+            Debug.Log("Crit!");
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(dir * weakPointPushAmount, ForceMode.Impulse);
             lastTouched = collision.gameObject.GetComponentInParent<Wrestler>();
         }
-        
 
         AIRB.AddForce(0.5f * pushAmount * -dir, ForceMode.Impulse);
         AIAnim.SetBool("isPushing", true);
@@ -119,7 +118,7 @@ public class AIController : Wrestler
         return lastTouched;
     }
 
-        private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Coin"))
             CoinManager.Instance.CoinTaken(other.gameObject);

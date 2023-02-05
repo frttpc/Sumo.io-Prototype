@@ -1948,7 +1948,7 @@ MonoBehaviour:
   restartButton: {fileID: 878779598}
   pauseIcon: {fileID: 21300000, guid: a71ba340d084c2d468ee5f780522fafa, type: 3}
   playIcon: {fileID: 21300000, guid: 52c061417ea179a4ea20b6db73f4cb53, type: 3}
-  totalTime: 90
+  totalTime: 61
 --- !u!1 &942645048
 GameObject:
   m_ObjectHideFlags: 0

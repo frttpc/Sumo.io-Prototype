@@ -64,6 +64,7 @@ public class PlayerController : Wrestler
         }
         else if (collision.gameObject.CompareTag("WeakPoint"))
         {
+            Debug.Log("Crit!");
             collision.gameObject.GetComponent<Rigidbody>().AddForce(dir * weakPointPushAmount, ForceMode.Impulse);
         }
 

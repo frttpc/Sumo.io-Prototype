@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float totalTime;
 
     private int previousSecond = int.MaxValue;
+    private bool isEnded = false;
 
     public static UIManager Instance;
 
@@ -50,8 +51,11 @@ public class UIManager : MonoBehaviour
                 timer.text = ((int)totalTime).ToString();
             }
         }
-        else
-            GameManager.Instance.GameIsEnded(3);
+        else if (!isEnded)
+        {
+            GameManager.Instance.GameIsEnded(2);
+            isEnded = true;
+        }
     }
 
     public void ChangeLogo()

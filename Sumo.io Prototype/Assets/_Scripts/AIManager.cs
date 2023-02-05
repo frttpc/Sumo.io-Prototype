@@ -17,7 +17,7 @@ public class AIManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    private void OnEnable()
     {
         SpawnAIs();
     }
@@ -50,6 +50,8 @@ public class AIManager : MonoBehaviour
 
         AIs.Remove(deadAI);
         Destroy(deadAI.gameObject);
+
+        UIManager.Instance.DecreaseEnemyCountText(AIs.Count);
 
         if (AIs.Count == 0)
             GameManager.Instance.GameIsEnded(1);
