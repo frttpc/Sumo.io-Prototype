@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OnTriggerDestroy : MonoBehaviour
 {
-    [SerializeField] private bool destroySelf;
-
     private void OnTriggerEnter(Collider other)
     {
-        if(destroySelf)
-            Destroy(gameObject);
-        else
+        if (other.CompareTag("Player"))
+        {
             Destroy(other.gameObject);
+            GameManager.Instance.GameIsEnded(0);
+        }
+        else
+        {
+            AIManager.Instance.AIDied(other.gameObject.GetComponentInParent<AIController>());
+        }
     }
 }

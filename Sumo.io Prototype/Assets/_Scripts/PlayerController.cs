@@ -1,19 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Wrestler
 {
     private Touch touch;
     private Rigidbody playerRB;
-    private Animator animator;
-
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float pushAmount;
-    [SerializeField] private float weakPointPushAmount;
+    private Animator playerAnim;
 
     private Vector2 firstTouchPos;
     private Vector2 currentTouchPos;
+    private Quaternion rotateAmount;
 
     public static PlayerController Instance;
 
@@ -25,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerRB = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        playerAnim = GetComponent<Animator>();
     }
 
     private void Update()
@@ -37,37 +32,52 @@ public class PlayerController : MonoBehaviour
             firstTouchPos = touch.position;
         else
             currentTouchPos = touch.position;
+
+        Vector3 swipeVector = new Vector3(currentTouchPos.x - firstTouchPos.x, 0, currentTouchPos.y - firstTouchPos.y).normalized;
+        float angle = Vector3.SignedAngle(Vector3.forward, swipeVector, new Vector3(0, 1, 0));
+        rotateAmount = Quaternion.Euler(new Vector3(0, angle - 90f, 0));
+
+        playerAnim.SetBool("isPushing", false);
     }
 
     private void FixedUpdate()
     {
-        Vector3 swipeVector = new Vector3(currentTouchPos.x - firstTouchPos.x, 0, currentTouchPos.y - firstTouchPos.y).normalized;
+        playerRB.MoveRotation(rotateAmount.normalized);
 
-        if (swipeVector.sqrMagnitude > 0)
-        {
-            Debug.Log(Vector3.SignedAngle(Vector3.right, swipeVector, new Vector3(0,1,0)));
-        }
-
-        //playerRB.AddForce(Vector3.forward * moveSpeed, ForceMode.Force);
-        float angle = Vector3.SignedAngle(Vector3.forward, swipeVector, new Vector3(0, 1, 0));
-        Quaternion rotateAmount = Quaternion.Euler(new Vector3(0, angle, 0));
-        playerRB.MoveRotation(rotateAmount);
+        playerRB.AddForce(playerRB.transform.forward * acceleration, ForceMode.Force);
+        if (playerRB.velocity.sqrMagnitude > maxSpeed * maxSpeed)
+            playerRB.AddForce(-acceleration * playerRB.velocity, ForceMode.Force);
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    Vector3 dir = collision.gameObject.transform.position - transform.position;
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+            return;
 
-    //    if (collision.gameObject.CompareTag("AI"))
-    //        collision.gameObject.GetComponent<Rigidbody>().AddForce(dir.normalized * pushAmount, ForceMode.Force);
+        Vector3 dir = (collision.gameObject.transform.position - transform.position).normalized;
 
-    //    else if(collision.gameObject.CompareTag("WeakPoint"))
-    //        collision.gameObject.GetComponent<Rigidbody>().AddForce(dir.normalized * weakPointPushAmount, ForceMode.Force);
-    //}
+        if (collision.gameObject.CompareTag("AI"))
+        {
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(dir * pushAmount, ForceMode.Impulse);
+        }
+        else if (collision.gameObject.CompareTag("WeakPoint"))
+        {
+            collision.gameObject.GetComponent<Rigidbody>().AddForce(dir * weakPointPushAmount, ForceMode.Impulse);
+        }
+
+        playerRB.AddForce(dir * playerRB.velocity.magnitude, ForceMode.Impulse);
+        playerAnim.SetBool("isPushing", true);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Coin"))
             CoinManager.Instance.CoinTaken(other.gameObject);
+    }
+
+    public override void GivePoints(int amount)
+    {
+        base.GivePoints(amount);
+        UIManager.Instance.IncreasePoints(amount);
     }
 }

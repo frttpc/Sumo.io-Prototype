@@ -1,12 +1,16 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    [SerializeField] private PlayerController player;
 
-    [SerializeField] private float totalTime;
+    public event Action OnWin;
+    public event Action OnLose;
+
+    public static GameManager Instance;
 
     private void Awake()
     {
@@ -15,12 +19,28 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+        OnLose += ChangeTimeScale;
+        OnWin += ChangeTimeScale;
+        ChangeTimeScale();
     }
 
-    private void Update()
+    public void GameIsEnded(int code)
     {
-
+        switch (code)
+        {
+            case 0:
+                OnLose?.Invoke();
+                break;
+            case 1:
+                OnWin?.Invoke();
+                break;
+            case 2:
+                if (AIManager.Instance.GetMostPointsOfAI() > player.GetPoints())
+                    OnLose?.Invoke();
+                else
+                    OnWin?.Invoke();
+                break;
+        }
     }
 
     public void ChangeTimeScale()
@@ -29,5 +49,11 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+    }
+
+    public void RestartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        ChangeTimeScale();
     }
 }
