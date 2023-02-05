@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
         ChangeTimeScale();
     }
 
+    //When game is ended choose which event to invoke
     public void GameIsEnded(int code)
     {
         switch (code)
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Stop and resume timeScale
     public void ChangeTimeScale()
     {
         if (Time.timeScale == 1)
@@ -51,6 +53,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1;
     }
 
+    //Restart scene
     public void RestartScene()
     {
         SceneManager.LoadScene(0);

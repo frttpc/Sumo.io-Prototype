@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Wrestler : MonoBehaviour
 {
+    //Base class for both player and AI
+
     [SerializeField] protected float acceleration;
     [SerializeField] protected float maxSpeed;
     [SerializeField] protected float pushAmount;

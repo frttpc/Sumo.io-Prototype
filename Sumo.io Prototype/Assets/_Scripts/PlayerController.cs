@@ -25,6 +25,7 @@ public class PlayerController : Wrestler
         playerAnim = GetComponent<Animator>();
     }
 
+    //Calculate touch and swipe 
     private void Update()
     {
         if (Input.touchCount > 0)
@@ -42,6 +43,7 @@ public class PlayerController : Wrestler
         playerAnim.SetBool("isPushing", false);
     }
 
+    //Move by applying force 
     private void FixedUpdate()
     {
         playerRB.MoveRotation(Quaternion.Lerp(transform.rotation, rotateAmount.normalized, rotationSpeed * Time.fixedDeltaTime));
@@ -50,7 +52,8 @@ public class PlayerController : Wrestler
         if (playerRB.velocity.sqrMagnitude > maxSpeed * maxSpeed)
             playerRB.AddForce(-acceleration * playerRB.velocity, ForceMode.Force);
     }
-
+    
+    //On collision enter means push or be pushed
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -74,8 +77,10 @@ public class PlayerController : Wrestler
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Coin"))
+        if (other.CompareTag("Coin"))
+        {
             CoinManager.Instance.CoinTaken(other.gameObject);
+        }
     }
 
     public override void GivePoints(int amount)

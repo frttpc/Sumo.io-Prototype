@@ -23,10 +23,13 @@ public class AIController : Wrestler
     private void Start()
     {
         decisivenessCoeff = Random.Range(10, decisiveness);
-        hunterCoeff = Random.Range(1,5);
-        gathererCoeff = Random.Range(1,5);
+        hunterCoeff = Random.Range(1,10);
+        gathererCoeff = Random.Range(1,10);
     }
 
+    //Looking at the target
+    //also decisiveness trait lets agent to change his mind so that they are not stuck with their choices
+    //tested at 100, can be lowered
     private void Update()
     {
         if (target == null)
@@ -40,6 +43,7 @@ public class AIController : Wrestler
         AIAnim.SetBool("isPushing", false);
     }
 
+    //Move by applying force
     private void FixedUpdate()
     {
         AIRB.AddForce(AIRB.transform.forward * acceleration, ForceMode.Force);
@@ -47,6 +51,8 @@ public class AIController : Wrestler
             AIRB.AddForce(-acceleration * AIRB.velocity, ForceMode.Force);
     }
 
+    //Find a target by calculating distance and multply by hunter or gatherer trait coefficient (simple characteristic) so that
+    //not every AI is the same
     private void AquireTarget()
     {
         Collider[] objects = Physics.OverlapSphere(AIRB.transform.position, 20);
@@ -85,6 +91,7 @@ public class AIController : Wrestler
             target = closestCoin;
     }
 
+    //When an AI is pushed or be pushed
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

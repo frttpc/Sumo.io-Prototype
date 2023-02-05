@@ -26,6 +26,7 @@ public class CoinManager : MonoBehaviour
         coinTimer = spawnFrequency;
     }
 
+    //Generate coins with timer
     private void Update()
     {
         coinTimer -= Time.deltaTime;
@@ -36,13 +37,19 @@ public class CoinManager : MonoBehaviour
         }
     }
 
-    public void CoinTaken(GameObject takenCoin)
+    //When a coin is taken give points to taker and destroy it
+    public void CoinTaken(GameObject takenCoin, Wrestler takenBy)
     {
-        UIManager.Instance.IncreasePoints(coinValue);
+        takenBy.GivePoints(coinValue);
+
+        if(takenBy.CompareTag("Player"))
+            UIManager.Instance.IncreasePoints(coinValue);
+
         coins.Remove(takenCoin);
         Destroy(takenCoin);
     }
 
+    //Instantiate coin in arena
     private void RespawnCoin()
     {
         Vector2 pos = Random.insideUnitCircle * spawnRadius;

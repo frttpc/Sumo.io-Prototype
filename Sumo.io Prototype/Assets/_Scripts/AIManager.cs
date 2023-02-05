@@ -22,6 +22,7 @@ public class AIManager : MonoBehaviour
         SpawnAIs();
     }
 
+    //Spawn AIs around center evenly
     private void SpawnAIs()
     {
         for (int i = 1; i <= maxAIAmount; i++)
@@ -43,6 +44,8 @@ public class AIManager : MonoBehaviour
         return AIs.Count;
     }
 
+    //When an AI dies edit give points to the killer and edit count
+    //if no one left game is ended by gameManager
     public void AIDied(AIController deadAI)
     {
         if(deadAI.GetLastTouched() != null)
@@ -57,6 +60,7 @@ public class AIManager : MonoBehaviour
             GameManager.Instance.GameIsEnded(1);
     }
 
+    //get the most point of AIs
     public int GetMostPointsOfAI()
     {
         int points = 0;

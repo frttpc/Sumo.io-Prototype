@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class OnTriggerDestroy : MonoBehaviour
 {
+    //When an object enter death area
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
         Timer();
     }
 
+    //Basic Timer, if ended call GameManager
     private void Timer()
     {
         totalTime -= Time.deltaTime;
@@ -58,6 +59,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    //Start Stop Logo Change
     public void ChangeLogo()
     {
         if (pausePlayButton.sprite == pauseIcon)
@@ -71,6 +73,7 @@ public class UIManager : MonoBehaviour
         enemies.text = count.ToString();
     }
 
+    //Edit points text
     public void IncreasePoints(int amount)
     {
         int currentPoints = int.Parse(points.text);
@@ -78,6 +81,7 @@ public class UIManager : MonoBehaviour
         points.text = currentPoints.ToString();
     }
 
+    //Show Win Screen
     public void WinScreen()
     {
         pausePlayButton.gameObject.SetActive(false);
@@ -89,6 +93,7 @@ public class UIManager : MonoBehaviour
         restartButton.SetActive(true);
     }
 
+    //Show Lose Screen
     public void LoseScreen()
     {
         pausePlayButton.gameObject.SetActive(false);
