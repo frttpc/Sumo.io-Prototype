@@ -128,6 +128,6 @@ public class AIController : Wrestler
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Coin"))
-            CoinManager.Instance.CoinTaken(other.gameObject);
+            CoinManager.Instance.CoinTaken(other.gameObject, this);
     }
 }

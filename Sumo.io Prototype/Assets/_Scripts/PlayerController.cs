@@ -79,7 +79,7 @@ public class PlayerController : Wrestler
     {
         if (other.CompareTag("Coin"))
         {
-            CoinManager.Instance.CoinTaken(other.gameObject);
+            CoinManager.Instance.CoinTaken(other.gameObject, this);
         }
     }
 
